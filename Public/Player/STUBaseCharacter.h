@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Weapon/STUBaseWeapon.h"
 #include "Components/STUWeaponComponent.h"
+#include "UI/STUStatisticsWidget.h"
 #include "STUBaseCharacter.generated.h"
 
 
@@ -26,6 +27,9 @@ public:
 	ASTUBaseCharacter(const FObjectInitializer& ObjInit);
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USTUStatisticsWidget* StatisticsComponent;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USTUHealthComponent* HealthComponent;
 
