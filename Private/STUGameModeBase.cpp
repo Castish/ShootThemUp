@@ -260,6 +260,12 @@ void ASTUGameModeBase::SetMatchState(ESTUMatchState State)
 	OnMatchStateChanged.Broadcast(MatchState);
 }
 
+void ASTUGameModeBase::OnTabPressed()
+{
+
+	
+}
+
 void ASTUGameModeBase::LogPlayerInfo()
 {
 	if (!GetWorld()) return;

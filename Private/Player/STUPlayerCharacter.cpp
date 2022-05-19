@@ -33,7 +33,7 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	check(WeaponComponent);
-	
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASTUPlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASTUPlayerCharacter::MoveRight);
@@ -47,8 +47,7 @@ void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &USTUWeaponComponent::StopFire);
 	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &USTUWeaponComponent::NextWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &USTUWeaponComponent::Reload);
-	PlayerInputComponent->BindAction("Statistics", IE_Pressed, StatisticsComponent, &USTUStatisticsWidget::ShowStatistics);
-	PlayerInputComponent->BindAction("Statistics", IE_Released, StatisticsComponent, &USTUStatisticsWidget::HideStatistics);
+	
 }
 
 
@@ -76,18 +75,18 @@ void ASTUPlayerCharacter::OnStopRunning()
 
 
 
+
 void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                                        bool bFromSweep, const FHitResult& SweepResult)
 {
 	CheckCameraOverlap();
-	
 }
 
 void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+                                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	CheckCameraOverlap();
-
 }
 
 void ASTUPlayerCharacter::CheckCameraOverlap()
@@ -96,14 +95,14 @@ void ASTUPlayerCharacter::CheckCameraOverlap()
 	GetMesh()->SetOwnerNoSee(HideMesh);
 	TArray<USceneComponent*> MeshChildren;
 	GetMesh()->GetChildrenComponents(true, MeshChildren);
-for (auto MeshChild:MeshChildren)
-{
-	const auto MeshChildGeometry = Cast<UPrimitiveComponent>(MeshChild);
-	if(MeshChild)
+	for (auto MeshChild : MeshChildren)
 	{
-		MeshChildGeometry->SetOwnerNoSee(HideMesh);
+		const auto MeshChildGeometry = Cast<UPrimitiveComponent>(MeshChild);
+		if (MeshChild)
+		{
+			MeshChildGeometry->SetOwnerNoSee(HideMesh);
+		}
 	}
-}
 }
 
 bool ASTUPlayerCharacter::IsRunning() const
@@ -126,6 +125,21 @@ void ASTUPlayerCharacter::BeginPlay()
 
 	check(CameraCollisionComponent);
 
-	CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionBeginOverlap);
+//	CreateStatisticsWidget();
+
+	CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(
+		this, &ASTUPlayerCharacter::OnCameraCollisionBeginOverlap);
 	CameraCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionEndOverlap);
 }
+
+/*void ASTUPlayerCharacter::ShowStatistics()
+{
+	PlayerStatisticsWidget->UpdatePlayersStat();
+	PlayerStatisticsWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void ASTUPlayerCharacter::HideStatistics()
+{
+	PlayerStatisticsWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+*/

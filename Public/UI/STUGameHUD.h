@@ -7,6 +7,7 @@
 #include "STUCoreTypes.h"
 #include "STUGameHUD.generated.h"
 
+class USTUStatisticsWidget;
 /**
  * 
  */
@@ -14,6 +15,7 @@ UCLASS()
 class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 {
 	GENERATED_BODY()
+	ASTUGameHUD();
 public:
 	virtual void DrawHUD() override;
 protected:
@@ -24,16 +26,26 @@ protected:
 	TSubclassOf<UUserWidget> PauseWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
-	TSubclassOf<UUserWidget> GameOverWidgetClass;;
+	TSubclassOf<UUserWidget> GameOverWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
+	TSubclassOf<UUserWidget> PlayerStatisticsClass;
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 private:
 	UPROPERTY()
-	TMap <ESTUMatchState, UUserWidget*> GameWidgets;
-	
+	TMap<ESTUMatchState, UUserWidget*> GameWidgets;
+
 	UPROPERTY()
 	UUserWidget* CurrentWidget = nullptr;
-	
+	UPROPERTY()
+	USTUStatisticsWidget* StatisticsWidget = nullptr;
 	void DrawCrossHair();
 	void OnMatchStateChanged(ESTUMatchState State);
+
+	void OnTabPressed(bool Tab);
+
+	void CreateStatisticsWidget();
+
 };

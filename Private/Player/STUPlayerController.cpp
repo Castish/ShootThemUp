@@ -20,6 +20,7 @@ void ASTUPlayerController::BeginPlay()
 		{
 			GameMode->OnMatchStateChanged.AddUObject(this, &ASTUPlayerController::OnMatchStateChanged);
 		}
+		
 	}
 }
 
@@ -28,24 +29,40 @@ void ASTUPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	if (!InputComponent) return;
 	InputComponent->BindAction("PauseGame", IE_Pressed, this, &ASTUPlayerController::OnPauseGame);
+	InputComponent->BindAction("Statistics", IE_Pressed, this,
+	                           &ASTUPlayerController::ShowStatistics);
+	InputComponent->BindAction("Statistics", IE_Released, this,
+	                           &ASTUPlayerController::HideStatistics);
 }
 
 void ASTUPlayerController::OnPauseGame()
 {
-	if(!GetWorld() || !GetWorld()->GetAuthGameMode()) return;
+	if (!GetWorld() || !GetWorld()->GetAuthGameMode()) return;
 	GetWorld()->GetAuthGameMode()->SetPause(this);
 }
 
 void ASTUPlayerController::OnMatchStateChanged(ESTUMatchState State)
 {
-if (State== ESTUMatchState::InProgress)
-{
-	SetInputMode(FInputModeGameOnly());
-	bShowMouseCursor = false;
+	if (State == ESTUMatchState::InProgress)
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+	}
+	else
+	{
+		SetInputMode(FInputModeUIOnly());
+		bShowMouseCursor = true;
+	}
 }
-else
+
+void ASTUPlayerController::ShowStatistics()
 {
-	SetInputMode(FInputModeUIOnly());
-	bShowMouseCursor = true;
+	OnTabPressed = true;
+	TabPressed.Broadcast(OnTabPressed);
 }
+
+void ASTUPlayerController::HideStatistics()
+{
+	OnTabPressed = false;
+	TabPressed.Broadcast(OnTabPressed);
 }

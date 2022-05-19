@@ -12,15 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "STUGameInstance.h"
 
-void USTUStatisticsWidget::ShowStatistics()
-{
-	SetVisibility(ESlateVisibility::Visible);
-}
 
-void USTUStatisticsWidget::HideStatistics()
-{
-	SetVisibility(ESlateVisibility::Hidden);
-}
 
 void USTUStatisticsWidget::NativeOnInitialized()
 {

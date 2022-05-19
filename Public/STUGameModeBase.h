@@ -17,7 +17,7 @@ public:
 	ASTUGameModeBase();
 
 	FOnMatchStateChangedSignature OnMatchStateChanged;
-	
+	FOnTabPressed TabPressed;
 	virtual void StartPlay() override;
 	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
@@ -66,6 +66,8 @@ private:
 	void GameOver();
 
 	void SetMatchState(ESTUMatchState State);
+
+	void OnTabPressed();
 
 	
 };

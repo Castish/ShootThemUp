@@ -5,7 +5,15 @@
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
 #include "STUGameModeBase.h"
+#include "Chaos/ChaosPerfTest.h"
+#include "Player/STUPlayerController.h"
+#include "UI/STUStatisticsWidget.h"
 
+
+ASTUGameHUD::ASTUGameHUD()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
 
 void ASTUGameHUD::DrawHUD()
 {
@@ -21,6 +29,7 @@ void ASTUGameHUD::BeginPlay()
 	GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
 	GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
 	GameWidgets.Add(ESTUMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
+	CreateStatisticsWidget();
 	for (auto GameWidgetPair : GameWidgets)
 	{
 		const auto GameWidget = GameWidgetPair.Value;
@@ -37,7 +46,35 @@ void ASTUGameHUD::BeginPlay()
 		{
 			GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::OnMatchStateChanged);
 		}
+		const auto Controller = Cast<ASTUPlayerController>(GetOwningPawn()->Controller);
+		Controller->TabPressed.AddUObject(this, &ASTUGameHUD::OnTabPressed);
 	}
+}
+
+void ASTUGameHUD::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	StatisticsWidget->UpdatePlayersStat();
+}
+
+void ASTUGameHUD::OnTabPressed(bool Tab)
+{
+	if (Tab)
+	{
+		StatisticsWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else if (!Tab)
+	{
+		StatisticsWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void ASTUGameHUD::CreateStatisticsWidget()
+{
+	StatisticsWidget = CreateWidget<USTUStatisticsWidget>(GetWorld(), PlayerStatisticsClass);
+	if (!StatisticsWidget) return;
+	StatisticsWidget->AddToViewport();
+	StatisticsWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ASTUGameHUD::DrawCrossHair()

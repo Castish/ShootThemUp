@@ -117,6 +117,8 @@ WaitingToStart = 0,
 };
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchState);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTabPressed, bool);
+
 USTRUCT(BlueprintType)
 struct FLevelData
 {

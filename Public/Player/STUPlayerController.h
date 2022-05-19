@@ -15,6 +15,8 @@ class SHOOTTHEMUP_API ASTUPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	ASTUPlayerController();
+
+	FOnTabPressed TabPressed;
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USTURespawnComponent* RespawnComponent;
@@ -25,4 +27,7 @@ protected:
 private:
 	void OnPauseGame();
 	void OnMatchStateChanged(ESTUMatchState State);
+	bool OnTabPressed;
+	void ShowStatistics();
+	void HideStatistics();
 };
